@@ -1,7 +1,9 @@
 <script>
-    import Pin from '$lib/components/Pin.svelte';
+    import { goto } from "$app/navigation";
+    import { onMount } from 'svelte';
+
+    // check for a valid session
+    onMount(() => {
+        goto('/account')
+    })
 </script>
-<div class="app col">
-    <h2 class="text-center">Enter your PIN</h2>
-    <Pin />
-</div>
