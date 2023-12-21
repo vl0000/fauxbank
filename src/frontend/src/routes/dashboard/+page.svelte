@@ -14,15 +14,15 @@
 <div class="row" id="latest-transactions">
     <TransactionList title={"Latest transactions"} />
 </div>
+
 <style>
     #top {
-        height: 8vh;
+        height: 10vh;
     }
     #balance {
-        height: 16vh;
-        align-content: space-around;
+        height: 15vh;
     }
     #latest-transactions {
-        height: 60vh;
+        height: 50vh;
     }
 </style>
