@@ -1,5 +1,6 @@
 from typing import Annotated
 from fastapi import FastAPI, Query
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -23,5 +24,5 @@ def get_account(id: int | None, query: Annotated[list[str], Query()] = None):
     if query:
         for q in query:
             response[q] = acc.model_dump()[q]
-
-    return response
+    
+    return JSONResponse(content=response, headers={"Access-Control-Allow-Origin": "same-origin"})
