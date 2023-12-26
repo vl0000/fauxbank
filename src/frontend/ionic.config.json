@@ -1,0 +1,7 @@
+{
+  "name": "fauxbank",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}
