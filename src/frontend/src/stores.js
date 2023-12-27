@@ -9,7 +9,7 @@ const default_values = {
 }
 async function get_account_data() {
     let resp = await fetch(
-        "http://localhost:8000/api/account/1?query=full_name",
+        "http://localhost:8000/api/account/1",
         {
             headers: {
                 method: "GET",
@@ -17,7 +17,7 @@ async function get_account_data() {
             }
         }
     ).then(resp => resp.json())
-    console.log(resp.full_name)
+    console.log(resp)
     return resp
 }
 // refactor this so that only balance and transaction stores are polled repeatedly

@@ -32,5 +32,7 @@ def get_account(id: int | None, query: Annotated[list[str], Query()] = None):
     if query:
         for q in query:
             response[q] = acc.model_dump()[q]
+    else:
+        response = acc.model_dump()
     
     return JSONResponse(content=response, headers={"Access-Control-Allow-Origin": "same-origin"})

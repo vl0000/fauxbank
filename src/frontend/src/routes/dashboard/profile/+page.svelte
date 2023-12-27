@@ -1,17 +1,13 @@
 <script>
-    const data = {
-        fullname: "FirstName LastName",
-        agency: "00005",
-        account: "0000000123",
-    }
+    import { account } from "../../../stores";
 </script>
 
 <div class="row px-2 pt-2" id="info">
     <div class="col bg-primary-subtle">   
-        <span>{data.fullname}</span>
+        <span>{$account.full_name}</span>
         <div class="d-flex">
-            <span>{data.agency}</span>
-            <span class="px-3">{data.account}</span>
+            <span>{$account.agency}</span>
+            <span class="px-3">{$account.account_number}</span>
         </div>
     </div>
 </div>

@@ -1,15 +1,14 @@
 <script>
     // should load this data from the server
+    import { account } from "../../stores";
+
     const symbol = "R$"
 
-    const data = {
-        balance: 1500.00
-    }
 </script>
 <div class="accountbalance">
     <span>Balance</span>
     <div id="balance">
-        {symbol} {data.balance}
+        {symbol} {$account.balance}
     </div>
 </div>
 <style>
