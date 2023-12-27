@@ -5,10 +5,10 @@
     </div>
     <div class="row">
         <div class="col">
-            <a href="/" class="btn btn-primary">I have an account</a>
+            <a href="/dashboard" class="btn btn-primary">I have an account</a>
         </div>
         <div class="col">
-            <a href="/" class="btn btn-secondary">Create an account</a>
+            <a href="/dashboard" class="btn btn-secondary">Create an account</a>
         </div>
     </div>
 </div>
