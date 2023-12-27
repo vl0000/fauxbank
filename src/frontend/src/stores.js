@@ -18,7 +18,7 @@ async function get_account_data() {
         }
     ).then(resp => resp.json())
     console.log(resp.full_name)
-    return resp.full_name
+    return resp
 }
 // refactor this so that only balance and transaction stores are polled repeatedly
 export let account = readable(default_values, function start(set) {

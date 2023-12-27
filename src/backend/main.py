@@ -1,9 +1,17 @@
 from typing import Annotated
 from fastapi import FastAPI, Query
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 app = FastAPI()
+# Temporary and for TESTING PURPOSES ONLY!!!!
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 class Account(BaseModel):
     full_name: str | None = None
