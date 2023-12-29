@@ -6,6 +6,7 @@ class Account(BaseModel):
     balance: float | None = None
     agency: int | None = None
     account_number: int | None = None
+    email: str | None = None
 
     #TODO Turn create into a class model for a base DB class inheriting from BaseModel.
     def create(self):
@@ -14,7 +15,7 @@ class Account(BaseModel):
         table = __class__.__name__.lower()
 
         try:
-            CURSOR.execute(f"INSERT INTO {table} VALUES (NULL, ?, ?, ?, ?)", tp)
+            CURSOR.execute(f"INSERT INTO {table} VALUES (NULL, ?, ?, ?, ?, ?)", tp)
         except Exception as e:
             print(e)
             CONN.rollback()

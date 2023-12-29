@@ -13,3 +13,5 @@
 **/db.sqlite
 **/.env
 **/workbench.py
+**/__pycache__
+**/*.pyc

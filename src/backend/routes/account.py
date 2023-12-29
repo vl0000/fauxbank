@@ -2,7 +2,7 @@ from typing import Annotated
 
 from database.models import Account
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Form
 from fastapi.responses import JSONResponse
 
 # TEMPORARY!!
@@ -26,3 +26,10 @@ def get_account(id: int | None, query: Annotated[list[str], Query()] = None):
         response = acc.model_dump()
     
     return JSONResponse(content=response, headers={"Access-Control-Allow-Origin": "same-origin"})
+
+@router.post("/api/account/login")
+def login(email: Annotated[str, Form()], password: Annotated[str, Form()]):
+
+    #TODO Actual login
+    if email and password:
+        return { "success" : True }
