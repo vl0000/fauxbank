@@ -25,11 +25,19 @@ def get_account(id: int | None, query: Annotated[list[str], Query()] = None):
     else:
         response = acc.model_dump()
     
-    return JSONResponse(content=response, headers={"Access-Control-Allow-Origin": "same-origin"})
+    return JSONResponse(content=response)
 
-@router.post("/api/account/login")
+@router.post("/api/account/")
 def login(email: Annotated[str, Form()], password: Annotated[str, Form()]):
 
     #TODO Actual login
     if email and password:
         return { "success" : True }
+
+@router.post("/api/signup")
+def signup(full_name: Annotated[str, Form()],email: Annotated[str, Form()], password: Annotated[str, Form()]):
+
+    #TODO Implement validation
+    user = Account(full_name=full_name, email=email, password=password)
+    user.create()
+    return {"success" : True }
