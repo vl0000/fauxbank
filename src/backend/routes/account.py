@@ -27,11 +27,11 @@ def get_account(id: int | None, query: Annotated[list[str], Query()] = None):
     
     return JSONResponse(content=response)
 
-@router.post("/api/account/")
+@router.post("/api/account/token")
 def login(email: Annotated[str, Form()], password: Annotated[str, Form()]):
 
     #TODO Actual login
-    if email and password:
+    if email and password and Account.get_user(email):
         return { "success" : True }
 
 @router.post("/api/signup")
