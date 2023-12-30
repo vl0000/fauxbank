@@ -5,7 +5,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <a href="/dashboard" class="btn btn-primary">I have an account</a>
+            <a href="/account/login" class="btn btn-primary">I have an account</a>
         </div>
         <div class="col">
             <a href="/dashboard" class="btn btn-secondary">Create an account</a>

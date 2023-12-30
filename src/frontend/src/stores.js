@@ -1,5 +1,6 @@
 import { readable } from "svelte/store";
 
+export const api_url = "http://localhost:8000"
 // Everything in this file is temporary
 const default_values = {
     full_name: "NOTHING",
