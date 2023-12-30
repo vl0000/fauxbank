@@ -10,4 +10,8 @@
 **/.output
 **/vite.config.ts.timestamp-*
 **/vite.config.js.timestamp-*
-
+**/db.sqlite
+**/.env
+**/workbench.py
+**/__pycache__
+**/*.pyc
