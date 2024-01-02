@@ -9,7 +9,7 @@ def hash_password(password: str, salt: str):
     if not password:
         raise ValueError("Password cannot be null")
     else:
-        password = bcrypt.using(rounds=8).hash(password + salt)
+        return bcrypt.using(rounds=8).hash(password + salt)
 
 
 class AccountInDb(BaseModel):
@@ -27,7 +27,7 @@ class AccountInDb(BaseModel):
         temp_model = self.model_dump()
         temp_model['password'] = hash_password(temp_model['password'], temp_model['salt'])
 
-        DB.query(f"INSERT INTO account VALUES (NULL, ?, ?, ?, ?, ?)", tuple(temp_model.values()))
+        DB.query(f"INSERT INTO account VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", tuple(temp_model.values()))
 
     @classmethod
     def get_user(cls, email: str):

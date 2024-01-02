@@ -21,6 +21,7 @@ class Database:
 
         finally:
             result = CURSOR.fetchall()
+            CONN.commit()
             CURSOR.close()
             CONN.close()
             if result:
