@@ -30,6 +30,7 @@ def get_account(id: int | None, query: Annotated[list[str], Query()] = None):
 @router.post("/api/account/token")
 def login(email: Annotated[str, Form()], password: Annotated[str, Form()]):
 
+    print(email,password)
     #TODO Actual login
     if email and password and Account.get_user(email):
         return { "success" : True }

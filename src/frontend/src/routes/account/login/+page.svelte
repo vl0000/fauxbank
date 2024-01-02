@@ -5,8 +5,8 @@
     let form;
 
     async function handle_submit() {
-    console.log('submit')
-    const formData = new FormData(form);
+    const formData = new FormData(form)
+    console.log('submit', formData)
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -28,7 +28,7 @@
         <label for="email" class="form-label mt-2">Email Address</label>
         <input type="email" name="email" id="email" class="form-group">
         <label for="password" class="form-label mt-2">Password</label>
-        <input type="text" class="form-group">
+        <input type="password" name="password" class="form-group" required>
         <input type="submit" value="Login" id="login-btn" class="btn btn-primary mt-2">
     </form>
 </div>
