@@ -6,27 +6,22 @@ from fastapi import APIRouter, Query, Form, Depends
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-# TEMPORARY!!
-# TODO REMOVE THIS. After a db is made
-acc = AccountInDb(
-    full_name= "Fulano Fulanildo",
-    balance= 345.97,
-    agency= 1,
-    account_number= 1234
-)
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter(dependencies=[Depends(oauth2_scheme)])
+
+acc = {
+    "full_name": "fulano"
+}
 
 @router.get("/api/account/{id}")
 def get_account(id: int | None, query: Annotated[list[str], Query()] = None):
     response = dict()
     if query:
         for q in query:
-            response[q] = acc.model_dump()[q]
+            response[q] = acc[q]
     else:
-        response = acc.model_dump()
+        response = acc
     
     return JSONResponse(content=response)
 
