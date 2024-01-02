@@ -7,6 +7,8 @@ name = "pypi"
 uvicorn = {extras = ["standard"], version = "*"}
 fastapi = "*"
 python-multipart = "*"
+passlib = "*"
+python-jose = {extras = ["cryptography"], version = "*"}
 
 [dev-packages]
 
