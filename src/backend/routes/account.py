@@ -28,9 +28,7 @@ def get_account(id: int | None, query: Annotated[list[str], Query()] = None):
 @router.post("/api/account/token")
 def login(formData: Annotated[OAuth2PasswordRequestForm, Depends()]):
 
-    print(formData.username,formData.password)
-    #TODO Actual login
-    if formData and AccountInDb.get_user(email=formData.username):
+    if AccountInDb.authenticate(formData.username, formData.password):
         return { "success" : True }
 
 @router.post("/api/signup")
