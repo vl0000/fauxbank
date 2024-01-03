@@ -1,9 +1,17 @@
-from pydantic import BaseModel
-from database.config import DB
+from os import environ
 from random import randint
 from secrets import token_bytes
+from datetime import datetime, timedelta
+
+from pydantic import BaseModel
+from database.config import DB
+
+from jose import JWTError, jwt
 from passlib.hash import bcrypt
 from base64 import b64encode
+
+SECRET_KEY = environ.get("SECRET_KEY")
+ALGORITHM = environ.get("ALGO")
 
 def hash_password(password: str, salt: str):
     if not password:
@@ -12,6 +20,24 @@ def hash_password(password: str, salt: str):
         return bcrypt.using(rounds=8).hash(password + salt)
 
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+    @classmethod
+    def generate_token(cls, data: dict, expires: timedelta = 30):
+        to_encode = data.copy()
+        expiration = datetime.utcnow() + timedelta(minutes=expires)
+
+        to_encode.update({"exp": expiration})
+        
+        return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    
+    @classmethod
+    def decode(cls, token):
+        return jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+
+#TODO Normalise
 class AccountInDb(BaseModel):
     full_name: str
     balance: float = 0.0
