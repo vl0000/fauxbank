@@ -56,7 +56,7 @@ class AccountInDb(BaseModel):
         DB.query(f"INSERT INTO account VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", tuple(temp_model.values()))
     
     @classmethod
-    def authenticate(cls, email: str, password_in: str) -> bool:
+    def authenticate(cls, email: str, password_in: str):
         usr = cls.get_user(email)[0]
         if not usr:
             raise LookupError("No user found")
@@ -65,10 +65,11 @@ class AccountInDb(BaseModel):
         password_hash = usr[6]
         salt = usr[7]
 
+        # TODO return an output model
         if bcrypt.verify(password_in + salt, password_hash):
-            return True
+            return usr
         else:
-            return False
+            return None
 
 
     @classmethod
