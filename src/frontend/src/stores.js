@@ -1,4 +1,5 @@
 import { readable } from "svelte/store";
+import { Preferences } from "@capacitor/preferences";
 
 export const api_url = "http://localhost:8000"
 // Everything in this file is temporary
@@ -8,13 +9,15 @@ const default_values = {
     agency: 1,
     account_number: 0
 }
+
 async function get_account_data() {
     let resp = await fetch(
         "http://localhost:8000/api/account/1",
         {
             headers: {
                 method: "GET",
-                cors: "no-cors"
+                cors: "no-cors",
+                Authorization: `${await Preferences.get({ key: 'jwt-token' })}`
             }
         }
     ).then(resp => resp.json())
