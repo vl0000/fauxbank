@@ -50,8 +50,9 @@ class AccountAuth(BaseModel):
     salt: str = b64encode(token_bytes(16)).decode("utf-8")
 
     @classmethod
-    def get_user(cls, email: str):
-        return DB.query(f"SELECT * FROM account WHERE email = ?", (email,))
+    def get_user(cls, email: str) -> AccountOut:
+        tpl = DB.query(f"SELECT * FROM account WHERE email = ?", (email,))[0]
+        return AccountOut(**{key: value for key, value in zip(AccountOut.model_fields.keys(), tpl[1:5])})
 
     @classmethod
     def authenticate(cls, email: str, password_in: str):
