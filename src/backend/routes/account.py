@@ -6,7 +6,7 @@ from fastapi import APIRouter, Query, Form, Depends
 from fastapi.responses import JSONResponse, Response
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/account/token")
 
 router = APIRouter(prefix="/api/account")
 
@@ -29,9 +29,7 @@ def get_account(id: int | None, token: Annotated[oauth2_scheme, Depends()], quer
 
 @router.post("/token", response_model=Token)
 def login(response: Response,formData: Annotated[OAuth2PasswordRequestForm, Depends()]):
-    print("here")
     user = AccountInDb.authenticate(formData.username, formData.password)
-    print(user)
     if user:
         # The email is the 5th element in the returned tuple
         access_token = Token.generate_token(data={"sub": user[5]})

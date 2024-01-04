@@ -37,24 +37,22 @@ class Token(BaseModel):
     def decode(cls, token):
         return jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
 
-#TODO Normalise
-class AccountInDb(BaseModel):
+class AccountOut(BaseModel):
     full_name: str
     balance: float = 0.0
     agency: int = 1
     account_number: int = randint(1, 9999999999)
+
+class AccountAuth(BaseModel):
     email: str
     password: str
     # If the salt isnt turned into a string, it cannot be appended to the password later
     salt: str = b64encode(token_bytes(16)).decode("utf-8")
 
-    #TODO Turn create into a class model for a base DB class inheriting from BaseModel.
-    def create(self):
-        temp_model = self.model_dump()
-        temp_model['password'] = hash_password(temp_model['password'], temp_model['salt'])
+    @classmethod
+    def get_user(cls, email: str):
+        return DB.query(f"SELECT * FROM account WHERE email = ?", (email,))
 
-        DB.query(f"INSERT INTO account VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", tuple(temp_model.values()))
-    
     @classmethod
     def authenticate(cls, email: str, password_in: str):
         usr = cls.get_user(email)[0]
@@ -71,9 +69,18 @@ class AccountInDb(BaseModel):
         else:
             return None
 
+class AccountInDb(AccountAuth, AccountOut):
 
-    @classmethod
-    def get_user(cls, email: str):
-        return DB.query(f"SELECT * FROM account WHERE email = ?", (email,))
+    #TODO Turn create into a class model for a base DB class inheriting from BaseModel.
+    def create(self):
+        temp_model = self.model_dump()
+        temp_model['password'] = hash_password(temp_model['password'], temp_model['salt'])
+
+        DB.query(f"INSERT INTO account VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", tuple(temp_model.values()))
+    
+
+
+
+
     
  
