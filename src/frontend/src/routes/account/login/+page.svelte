@@ -23,6 +23,8 @@
         console.log('Server Response:', data);
       } catch (error) {
         console.error('Error:', error);
+      } finally {
+        window.location.href = "/dashboard";
       }
     }
 
