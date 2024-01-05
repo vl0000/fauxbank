@@ -51,8 +51,8 @@ class AccountAuth(BaseModel):
 
     @classmethod
     def get_user(cls, email: str) -> AccountOut:
-        tpl = DB.query(f"SELECT * FROM account WHERE email = ?", (email,))[0]
-        return AccountOut(**{key: value for key, value in zip(AccountOut.model_fields.keys(), tpl[1:5])})
+        tpl = DB.query(f"SELECT * FROM account WHERE email = ?", (email,))
+        return tpl
 
     @classmethod
     def authenticate(cls, email: str, password_in: str):

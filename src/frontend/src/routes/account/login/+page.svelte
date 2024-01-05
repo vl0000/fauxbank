@@ -1,26 +1,30 @@
 <script>
+    import { Preferences } from "@capacitor/preferences";
     import { api_url } from "../../../stores";
     const endpoint = api_url + "/api/account/token"
 
     let form;
 
     async function handle_submit() {
-    const formData = new FormData(form)
-    console.log('submit', formData)
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: formData,
-      });
+      const formData = new FormData(form)
+      console.log('submit', formData)
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          body: formData,
+        });
 
-      const data = await response.json();
+        const data = await response.json();
+        // Sets the jwt token for future usage
+        await Preferences.set({key: "jwt", value:"Bearer " + data.access_token})
 
-      // Print the response to the console
-      console.log('Server Response:', data);
-    } catch (error) {
-      console.error('Error:', error);
+
+        // Print the response to the console
+        console.log('Server Response:', data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
-  }
 
 </script>
 <div class="container text-center pt-3 px-5">
