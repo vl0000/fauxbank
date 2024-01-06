@@ -43,6 +43,9 @@ class AccountOut(BaseModel):
     agency: int = 1
     account_number: int = randint(1, 9999999999)
 
+
+
+
 class AccountAuth(BaseModel):
     email: str
     password: str
@@ -50,13 +53,14 @@ class AccountAuth(BaseModel):
     salt: str = b64encode(token_bytes(16)).decode("utf-8")
 
     @classmethod
-    def get_user(cls, email: str) -> AccountOut:
+    def _get_user(cls, email: str) -> tuple:
+        """To be used by other methods ONLY and never send this to the user"""
         tpl = DB.query(f"SELECT * FROM account WHERE email = ?", (email,))
         return tpl
 
     @classmethod
     def authenticate(cls, email: str, password_in: str):
-        usr = cls.get_user(email)[0]
+        usr = cls._get_user(email)[0]
         if not usr:
             raise LookupError("No user found")
         
@@ -71,6 +75,14 @@ class AccountAuth(BaseModel):
             return None
 
 class AccountInDb(AccountAuth, AccountOut):
+
+    @classmethod
+    def get_user_safe(cls, email: str) -> AccountOut:
+        """ This is the method you want to use if youre going to send this data to users """
+        # Only the data from the second to the fifth element is to be used
+        usr = AccountOut(*cls._get_user()[1:5])
+
+        return usr
 
     #TODO Turn create into a class model for a base DB class inheriting from BaseModel.
     def create(self):
