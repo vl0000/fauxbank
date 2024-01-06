@@ -2,7 +2,7 @@ from typing import Annotated
 
 from database.models import AccountInDb, Token
 
-from fastapi import APIRouter, Query, Form, Depends
+from fastapi import APIRouter, Query, Form, Depends, HTTPException
 from fastapi.responses import JSONResponse, Response
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
@@ -33,12 +33,17 @@ def login(response: Response,formData: Annotated[OAuth2PasswordRequestForm, Depe
     if user:
         # The email is the 5th element in the returned tuple
         access_token = Token.generate_token(data={"sub": user[5]})
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
+
     return {"access_token": access_token, "token_type": "bearer"}
 
-@router.post("/signup")
+@router.post("/signup", response_model=Token)
 def signup(full_name: Annotated[str, Form()],email: Annotated[str, Form()], password: Annotated[str, Form()]):
 
     #TODO Implement validation
     user = AccountInDb(full_name=full_name, email=email, password=password)
     user.create()
-    return {"success" : True }
+
+    access_token = Token.generate_token(data={"sub": user.email})
+    return {"access_token": access_token, "token_type": "bearer"}
