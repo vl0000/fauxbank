@@ -38,15 +38,19 @@ class Token(BaseModel):
         return jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
 
 class AccountOut(BaseModel):
+    """
+        This class is only meant to be used as output. DO NOT use for anything else!
+        Use AccountInDB for any database operations.
+    """
     full_name: str
     balance: float = 0.0
     agency: int = 1
     account_number: int = randint(1, 9999999999)
 
-
-
-
 class AccountAuth(BaseModel):
+    """
+        Do not use for anything other than authentication. Not even output
+    """
     email: str
     password: str
     # If the salt isnt turned into a string, it cannot be appended to the password later
@@ -75,16 +79,19 @@ class AccountAuth(BaseModel):
             return None
 
 class AccountInDb(AccountAuth, AccountOut):
-
+    """
+        This class will contain all the necessary user information.
+        Any database operations should be done through this class, regardless of
+        whether or not the method is present in others. An exception can be made for the
+        authenticate() method.
+    """
     @classmethod
     def get_user_safe(cls, email: str) -> AccountOut:
         """ This is the method you want to use if youre going to send this data to users """
         # Only the data from the second to the fifth element is to be used
         usr = AccountOut(*cls._get_user()[1:5])
-
         return usr
 
-    #TODO Turn create into a class model for a base DB class inheriting from BaseModel.
     def create(self):
         temp_model = self.model_dump()
         temp_model['password'] = hash_password(temp_model['password'], temp_model['salt'])
