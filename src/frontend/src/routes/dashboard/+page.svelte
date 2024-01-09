@@ -1,28 +1,19 @@
 <script>
     import AccountBalance from "$lib/components/AccountBalance.svelte";
-    import AccountInfo from "$lib/components/AccountInfo.svelte";
+    import Card from "$lib/components/Card.svelte";
+    import DashButtons from "$lib/components/DashButtons.svelte";
     import TransactionList from "$lib/components/TransactionList.svelte";
 
 </script>
 
-<div class="row" id="top">
-    <AccountInfo />
-</div>
-<div class="row" id="balance">
-    <AccountBalance />    
-</div>
-<div class="row" id="latest-transactions">
-    <TransactionList title={"Latest transactions"} />
-</div>
+
+<AccountBalance />
+<Card />
+<DashButtons />
+<TransactionList title="Latest Transaction"/>
 
 <style>
-    #top {
-        height: 10vh;
-    }
-    #balance {
-        height: 15vh;
-    }
-    #latest-transactions {
-        height: 50vh;
+    .blue {
+        background-color: aqua;
     }
 </style>
