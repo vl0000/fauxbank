@@ -1,64 +1,31 @@
-import sqlite3
+from sqlalchemy import MetaData, Table, Column, Integer, String, Float, ForeignKey, DateTime, Index, create_engine
 
-from contextlib import contextmanager
-from queue import Queue
-
-from os import environ
-
-class ConnectionPool:
-    def __init__(self, DB_name: str) -> None:
-        self.DB_name = DB_name
-        self.pool = Queue(maxsize=8)
-
-        for _ in range(8):
-            conn = sqlite3.connect(DB_name, check_same_thread=False)
-            self.pool.put(conn)
-
-    
-    def _get_connection(self) -> sqlite3.Connection | None:
-
-        try:
-            return self.pool.get(timeout=12.0)
-        except Exception as e:
-            print(e)
-    
-    def _disconnect(self, connection: sqlite3.Connection) -> None:
-        self.pool.put(connection)
-
-    @contextmanager
-    def connection(self):
-        CONN = self._get_connection()
-        try:
-            yield CONN
-        finally:
-            self._disconnect(CONN)
-
-class Database:
-    def __init__(self, pool: ConnectionPool) -> None:
-        self.pool = pool
-    
-    def query(self, query: str, data: tuple = None) -> list[dict] | None:
-        with self.pool.connection() as CONN:
-            CURSOR = CONN.cursor()
-            try:
-                if data:
-                    CURSOR.execute(query, data)
-                else:
-                    CURSOR.execute(query)
-            except Exception as e:
-                print(e)
-                CONN.rollback()
-
-            finally:
-                result = CURSOR.fetchall()
-                CONN.commit()
-                if result:
-                    return result
-        
-
-connection_pool = ConnectionPool("db.sqlite")
-
-DB = Database(connection_pool)
+engine = create_engine("sqlite+pysqlite:///db.sqlite")
 
 
+meta = MetaData()
 
+accounts = Table(
+    "accounts",
+    meta,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("name", String(32), nullable=False),
+    Column("agency", Integer, nullable=False, default=1),
+    Column("number", Integer, unique=True, nullable=False),
+    Column("balance", Float, default=0.0),
+    Column("email", String(128), unique=True, nullable=False),
+    # 60 characters is the maximum due to this column being intended for bcrypt
+    Column("password", String(60), nullable=False),
+    Column("salt", String(21), nullable=False)
+)
+
+transactions = Table(
+    "transactions",
+    meta,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("payer", Integer, ForeignKey("accounts.id", ondelete="SET NULL")),
+    Column("payee", Integer, ForeignKey("accounts.id", ondelete="SET NULL")),
+    Column("amount", Float, nullable=False, default=0.0),
+    Column("date", DateTime(timezone=True)),
+    Index("idx_datetime", "date")
+)
