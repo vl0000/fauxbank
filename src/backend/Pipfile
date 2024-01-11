@@ -9,6 +9,7 @@ fastapi = "*"
 python-multipart = "*"
 passlib = "*"
 python-jose = {extras = ["cryptography"], version = "*"}
+sqlalchemy = "*"
 
 [dev-packages]
 

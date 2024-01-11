@@ -1,10 +1,10 @@
 from os import environ
-from random import randint
-from secrets import token_bytes
+from secrets import token_bytes, randbelow
 from datetime import datetime, timedelta
 
 from pydantic import BaseModel
-from database.config import DB
+from database.tables import engine, accounts, cards, transactions
+from sqlalchemy import insert, select
 
 from jose import JWTError, jwt
 from passlib.hash import bcrypt
@@ -42,10 +42,10 @@ class AccountOut(BaseModel):
         This class is only meant to be used as output. DO NOT use for anything else!
         Use AccountInDB for any database operations.
     """
-    full_name: str
+    name: str
     balance: float = 0.0
     agency: int = 1
-    account_number: int = randint(1, 9999999999)
+    number: int = randbelow(1, 9999999999)
 
 class AccountAuth(BaseModel):
     """
@@ -57,20 +57,22 @@ class AccountAuth(BaseModel):
     salt: str = b64encode(token_bytes(16)).decode("utf-8")
 
     @classmethod
-    def _get_user(cls, email: str) -> tuple:
+    def _get_user(cls, email: str):
         """To be used by other methods ONLY and never send this to the user"""
-        tpl = DB.query(f"SELECT * FROM account WHERE email = ?", (email,))
-        return tpl
+        with engine.connect() as conn:
+            stmt = select(accounts).where(accounts.c.email == email)
+            res = conn.execute(stmt).fetchone()._asdict()
+            return AccountInDb(**res)
 
     @classmethod
     def authenticate(cls, email: str, password_in: str):
-        usr = cls._get_user(email)[0]
+        usr = cls._get_user(email)
         if not usr:
             raise LookupError("No user found")
         
         #The password is the 7th element in the tuple and the salt the 8th
-        password_hash = usr[6]
-        salt = usr[7]
+        password_hash = usr.password
+        salt = usr.salt
 
         # TODO return an output model
         if bcrypt.verify(password_in + salt, password_hash):
@@ -78,7 +80,17 @@ class AccountAuth(BaseModel):
         else:
             return None
 
-class AccountInDb(AccountAuth, AccountOut):
+class DbModel:
+    @classmethod
+    def _query(cls, stmt):
+            with engine.connect() as conn:
+                res = conn.execute(stmt)
+                conn.commit()
+                if res:
+                    return res
+
+
+class AccountInDb(AccountAuth, AccountOut, DbModel):
     """
         This class will contain all the necessary user information.
         Any database operations should be done through this class, regardless of
@@ -89,18 +101,46 @@ class AccountInDb(AccountAuth, AccountOut):
     def get_user_safe(cls, email: str) -> AccountOut:
         """ This is the method you want to use if youre going to send this data to users """
         # Only the data from the second to the fifth element is to be used
-        usr = AccountOut(*cls._get_user()[1:5])
+        usr = AccountOut(**cls._get_user())
         return usr
 
     def create(self):
         temp_model = self.model_dump()
         temp_model['password'] = hash_password(temp_model['password'], temp_model['salt'])
+        stmt = insert(accounts).values(**temp_model)
 
-        DB.query(f"INSERT INTO account VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", tuple(temp_model.values()))
+        self._query(stmt)
     
-
-
-
-
+    def get_card(self):
+        stmt = select(cards).where(cards.c.holder == self.id)
+        res = self._query(stmt)
+        return res.fetchone()._asdict()
+        
     
- 
+class Transaction(BaseModel,DbModel):
+    id: int
+    payer: int
+    payee: int
+    amount: float = 0.0
+    date: datetime
+
+    def _create(self):
+        stmt = insert(transactions).values(**self.model_dump())
+
+        self._query(stmt)
+    
+    def get_all(self):
+        stmt = select(transactions)
+        res = self._query(stmt)
+        return res.fetchall()
+
+class Card(BaseModel, DbModel):
+    number: int
+    holder: int
+    cvv: int
+    expiration: date
+
+    def create(self):
+        stmt = insert(cards).values(**self.model_dump())
+
+        self._query(stmt)
