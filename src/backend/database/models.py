@@ -19,6 +19,13 @@ def hash_password(password: str, salt: str):
     else:
         return bcrypt.using(rounds=8).hash(password + salt)
 
+def query(stmt):
+        with engine.connect() as conn:
+            res = conn.execute(stmt)
+            conn.commit()
+            if res:
+                return res
+
 
 class Token(BaseModel):
     access_token: str
@@ -46,16 +53,31 @@ class AccountOut(BaseModel):
     balance: float = 0.0
     number: int = randbelow(9999999999)
 
-class DbModel:
-    @classmethod
-    def _query(cls, stmt):
-            with engine.connect() as conn:
-                res = conn.execute(stmt)
-                conn.commit()
-                if res:
-                    return res
+    def _get_transactions(self, incoming: bool = True):
+        """
+            If incoming is True, it will get all transactions where this account has received money.
+            If false, it will get all the ones where this account sent money.
+            It returns all the incoming ones by default
+        """
+        if incoming == False:
+            stmt = select(transactions.c.amount).where(transactions.c.payee == self.number)
+            return query(stmt).fetchall()
+        else:
+            stmt = select(transactions.c.amount).where(transactions.c.payer == self.number)
+            return query(stmt).fetchall()
 
-class AccountAuth(BaseModel, DbModel):
+    def _get_balance(self):
+        # all incoming transactions
+        incoming = self._get_transactions()
+        # Unpack them into a list of values instead of tuples
+        incoming = [x[0] for x in incoming]
+
+        outgoing = self._get_transactions(incoming=False)
+        outgoing = [x[0] for x in outgoing]
+
+        return (sum(incoming) - sum(outgoing))
+
+class AccountAuth(BaseModel):
     """
         Do not use for anything other than authentication. Not even output
     """
@@ -75,7 +97,7 @@ class AccountAuth(BaseModel, DbModel):
     @classmethod
     def authenticate(cls, email: str, password_in: str):
         stmt = select(accounts).where(accounts.c.email == email)
-        usr = cls._query(stmt).fetchone()._asdict()
+        usr = query(stmt).fetchone()._asdict()
         if not usr:
             raise LookupError("No user found")
 
@@ -110,30 +132,32 @@ class AccountInDb(AccountAuth, AccountOut):
         temp_model['password'] = hash_password(temp_model['password'], temp_model['salt'])
         stmt = insert(accounts).values(**temp_model)
 
-        self._query(stmt)
+        query(stmt)
     
     def get_card(self):
         stmt = select(cards).where(cards.c.holder == self.id)
-        res = self._query(stmt)
+        res = query(stmt)
         return res.fetchone()._asdict()
+    
+
+
         
     
-class Transaction(BaseModel, DbModel):
-    id: int
+class Transaction(BaseModel):
+    id: int | None = None
     payer: int
     payee: int
     amount: float = 0.0
-    date: datetime
+    date: datetime = datetime.utcnow()
 
     def _create(self):
         stmt = insert(transactions).values(**self.model_dump())
-
-        self._query(stmt)
+        query(stmt)
     
     @classmethod
     def get_all(cls):
         stmt = select(transactions)
-        res = cls._query(stmt)
+        res = query(stmt)
         return res.fetchall()
     
     def _get_account(self, who: int) -> dict:
@@ -141,7 +165,7 @@ class Transaction(BaseModel, DbModel):
         stmt = select(accounts).where(accounts.c.number == who)
 
         # if none are returned, this will raise an error
-        res = self._query(stmt).fetchone()._asdict()
+        res = query(stmt).fetchone()._asdict()
         return res
     
     def _get_payee(self) -> dict:
@@ -167,7 +191,7 @@ class Transaction(BaseModel, DbModel):
         return True
 
 
-class Card(BaseModel, DbModel):
+class Card(BaseModel):
     number: int
     holder: int
     cvv: int
@@ -176,4 +200,4 @@ class Card(BaseModel, DbModel):
     def create(self):
         stmt = insert(cards).values(**self.model_dump())
 
-        self._query(stmt)
+        query(stmt)
