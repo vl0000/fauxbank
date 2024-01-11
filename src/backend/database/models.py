@@ -1,10 +1,9 @@
 from os import environ
-from random import randint
-from secrets import token_bytes
+from secrets import token_bytes, randbelow
 from datetime import datetime, timedelta
 
 from pydantic import BaseModel
-from database.tables import accounts, engine
+from database.tables import engine, accounts, cards, transactions
 from sqlalchemy import insert, select
 
 from jose import JWTError, jwt
@@ -46,7 +45,7 @@ class AccountOut(BaseModel):
     name: str
     balance: float = 0.0
     agency: int = 1
-    number: int = randint(1, 9999999999)
+    number: int = randbelow(1, 9999999999)
 
 class AccountAuth(BaseModel):
     """
@@ -81,7 +80,17 @@ class AccountAuth(BaseModel):
         else:
             return None
 
-class AccountInDb(AccountAuth, AccountOut):
+class DbModel:
+    @classmethod
+    def _query(cls, stmt):
+            with engine.connect() as conn:
+                res = conn.execute(stmt)
+                conn.commit()
+                if res:
+                    return res
+
+
+class AccountInDb(AccountAuth, AccountOut, DbModel):
     """
         This class will contain all the necessary user information.
         Any database operations should be done through this class, regardless of
@@ -100,14 +109,38 @@ class AccountInDb(AccountAuth, AccountOut):
         temp_model['password'] = hash_password(temp_model['password'], temp_model['salt'])
         stmt = insert(accounts).values(**temp_model)
 
-        with engine.connect() as conn:
-            res = conn.execute(stmt)
-            conn.commit()
+        self._query(stmt)
+    
+    def get_card(self):
+        stmt = select(cards).where(cards.c.holder == self.id)
+        res = self._query(stmt)
+        return res.fetchone()._asdict()
         
     
+class Transaction(BaseModel,DbModel):
+    id: int
+    payer: int
+    payee: int
+    amount: float = 0.0
+    date: datetime
 
+    def _create(self):
+        stmt = insert(transactions).values(**self.model_dump())
 
-
-
+        self._query(stmt)
     
- 
+    def get_all(self):
+        stmt = select(transactions)
+        res = self._query(stmt)
+        return res.fetchall()
+
+class Card(BaseModel, DbModel):
+    number: int
+    holder: int
+    cvv: int
+    expiration: date
+
+    def create(self):
+        stmt = insert(cards).values(**self.model_dump())
+
+        self._query(stmt)

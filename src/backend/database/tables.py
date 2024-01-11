@@ -1,4 +1,4 @@
-from sqlalchemy import MetaData, Table, Column, Integer, String, Float, ForeignKey, DateTime, Index, create_engine
+from sqlalchemy import MetaData, Table, Column, Integer, String, Float, ForeignKey, DateTime,Date, Index, create_engine
 
 engine = create_engine("sqlite+pysqlite:///db.sqlite")
 
@@ -28,4 +28,14 @@ transactions = Table(
     Column("amount", Float, nullable=False, default=0.0),
     Column("date", DateTime(timezone=True)),
     Index("idx_datetime", "date")
+)
+
+cards = Table(
+    "cards",
+    meta,
+    Column("number", Integer, primary_key=True),
+    Column("holder", ForeignKey("accounts.id", ondelete="CASCADE"), nullable=False),
+    Column("cvv", Integer, nullable=False),
+    Column("expiration", Date, nullable=False),
+    Index("idx_expiration", "expiration")
 )
