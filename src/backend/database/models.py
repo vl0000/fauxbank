@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, date
 
 from pydantic import BaseModel
 from database.tables import engine, accounts, cards, transactions
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, or_
 
 from jose import JWTError, jwt
 from passlib.hash import bcrypt
@@ -65,8 +65,14 @@ class AccountOut(BaseModel):
         else:
             stmt = select(transactions.c.amount).where(transactions.c.payee == self.number)
             return query(stmt).fetchall()
+    
+    def get_all_transactions(self) -> list[tuple]:
+        condition = or_(transactions.c.payee == self.number, transactions.c.payer == self.number)
+        stmt = select(transactions).where(condition)
+        res = query(stmt).fetchall()
+        return res
 
-    def get_balance(self):
+    def get_balance(self) -> float:
         # all incoming transactions
         incoming = self._get_transactions()
         # Unpack them into a list of values instead of tuples
@@ -142,14 +148,16 @@ class AccountInDb(AccountAuth, AccountOut):
     
 
 
-        
+class TransactionIn(BaseModel):
+    payee: int
+    amount: float
     
 class Transaction(BaseModel):
     id: int | None = None
     payer: int
     payee: int
     amount: float = 0.0
-    date: datetime = datetime.utcnow()
+    date: datetime | None = datetime.utcnow()
 
     def _create(self):
         stmt = insert(transactions).values(**self.model_dump())
@@ -161,18 +169,18 @@ class Transaction(BaseModel):
         res = query(stmt)
         return res.fetchall()
     
-    def _get_account(self, who: int) -> dict:
+    def _get_account(self, who: int) -> AccountOut:
         """Gets the payer or payee """
         stmt = select(accounts).where(accounts.c.number == who)
 
         # if none are returned, this will raise an error
         res = query(stmt).fetchone()._asdict()
-        return res
+        return AccountOut(**res)
     
-    def _get_payee(self) -> dict:
+    def _get_payee(self) -> AccountOut:
         return self._get_account(self.payee)
     
-    def _get_payer(self) -> dict:
+    def _get_payer(self) -> AccountOut:
         return self._get_account(self.payer)
         
     def is_valid(self) -> bool:
@@ -184,10 +192,13 @@ class Transaction(BaseModel):
         # These functions will raise exceptions by themselves, in case one or neither exists
         payer = self._get_payer()
         payee = self._get_payee()
+        print(payer)
 
-        if payer["balance"] < self.amount:
+        if payer.get_balance() < self.amount:
             #TODO replace with an HTTP error
             raise ValueError("Not enough dosh")
+        elif  payee == None or payer == None:
+            raise LookupError("Missing a payer or payee")
         
         return True
 

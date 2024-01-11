@@ -14,8 +14,8 @@ async function get_account_data() {
     let resp = await fetch(
         "http://localhost:8000/api/account/1",
         {
+            method: "GET",
             headers: {
-                method: "GET",
                 cors: "no-cors",
                 Authorization: await Preferences.get({key: "jwt"}).then( (token) => token.value)
             }

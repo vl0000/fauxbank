@@ -1,55 +1,54 @@
 <script>
     import { Preferences } from "@capacitor/preferences";
-
     import { api_url } from "../../../stores";
-    
-    let payee = "";
+
+    let payee = 0;
     let inputValue = 0;
-  
+
     async function handleSubmit() {
-      // Handle form submission logic
-      let resp = await fetch(
-        api_url + "/api/payments",
-        {
-            headers: {
-                method: "POST",
-                cors: "no-cors",
-                Authorization: await Preferences.get({key: "jwt"}).then( (token) => token.value)
-            },
+        // Handle form submission logic
+        console.log('sent');
+        await Preferences.get({key: "jwt"}).then(token => console.log(token))
+        let resp = await fetch(
+            api_url + "/api/payments",
+            {
+                method: 'POST',
+                headers: {
+                    cors: "no-cors",
+                    "Content-Type": "application/json",
+                    "Authorization": await Preferences.get({key: "jwt"}).then( (token) => token.value)
 
-            body: JSON.stringify({ payer:"", payee: payee, amount: inputValue })
-        }
-    // Later we will show an awaiting screen and tell the user whether or not this transaction was accepted
-    ).then(resp => resp.json())
+                },
+
+                body: JSON.stringify({"payee": payee, "amount": inputValue})
+            }
+        ).then(res => console.log(res.json()))
     }
-  
+
     function handleClear() {
-      // Handle clear button logic
-      inputValue = 0;
+        // Handle clear button logic
+        inputValue = 0;
     }
-  </script>
-  
-  <div class="form-container">
-    <form action="">
-        <input type="number" class="form-input" bind:value={inputValue} on:submit|preventDefault={handleSubmit} />
-        <div class="button-container">
-            <button class="submit-button">Send</button>
-            <button class="clear-button" on:click={handleClear}>Clear</button>
-          </div>
-    </form>
-  
+</script>
 
-  </div>
-  
-  <style>
-    .form-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 50vh;
+<form class="form" action="" on:submit|preventDefault={handleSubmit}>
+    <input type="number" class="form-input" name="payee" bind:value={payee} placeholder="Account number" />
+    <input type="number" class="form-input" name="amount" bind:value={inputValue} placeholder="0.0" />
+    <div class="button-container">
+        <button class="submit-button">Send</button>
+        <button class="clear-button" on:click={handleClear}>Clear</button>
+    </div>
+</form>
+
+<style>
+    .form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 50vh;
     }
-  
+
     .form-input {
         background-color: white;
         border: 1px solid #ccc;
@@ -58,10 +57,10 @@
         font-weight: 500;
         color: #585858;
         transition: border-color 0.3s, color 0.3s;
-        width:100%;
         -webkit-appearance: none;
         appearance: textfield;
         text-align: right;
+        margin-top: 5px;
     }
 
     .form-input:focus {
@@ -69,19 +68,18 @@
         border-color: black;
     }
 
-  
     .button-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 15px;
+        display: flex;
+        direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        width: 200px;
     }
-  
+
     .submit-button,
     .clear-button {
-      padding: 10px;
-      font-size: 18px;
-      margin-right: 10px;
+        padding: 10px;
+        font-size: 18px;
     }
-  </style>
-  
+</style>

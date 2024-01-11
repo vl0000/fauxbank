@@ -1,13 +1,12 @@
 <script>
     import { Preferences } from "@capacitor/preferences";
     import { api_url } from "../../stores";
-    const endpoint = api_url + "/api/account/signup"
+    const endpoint = api_url + "/api/account/token"
 
     let form;
 
     async function handle_submit() {
       const formData = new FormData(form)
-      console.log('submit', formData)
       try {
         const response = await fetch(endpoint, {
           method: 'POST',
