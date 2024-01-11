@@ -118,7 +118,7 @@ class AccountInDb(AccountAuth, AccountOut):
         return res.fetchone()._asdict()
         
     
-class Transaction(BaseModel,DbModel):
+class Transaction(BaseModel, DbModel):
     id: int
     payer: int
     payee: int
@@ -130,10 +130,42 @@ class Transaction(BaseModel,DbModel):
 
         self._query(stmt)
     
-    def get_all(self):
+    @classmethod
+    def get_all(cls):
         stmt = select(transactions)
-        res = self._query(stmt)
+        res = cls._query(stmt)
         return res.fetchall()
+    
+    def _get_account(self, who: int) -> dict:
+        """Gets the payer or payee """
+        stmt = select(accounts).where(accounts.c.number == who)
+
+        # if none are returned, this will raise an error
+        res = self._query(stmt).fetchone()._asdict()
+        return res
+    
+    def _get_payee(self) -> dict:
+        return self._get_account(self.payee)
+    
+    def _get_payer(self) -> dict:
+        return self._get_account(self.payer)
+        
+    def is_valid(self) -> bool:
+        """
+        This function will check 2 things:
+        1- Whether or not the payer has sufficient funds to complete the transaction
+        2- Whether or not the payee exists
+        """
+        # These functions will raise exceptions by themselves, in case one or neither exists
+        payer = self._get_payer()
+        payee = self._get_payee()
+
+        if payer["balance"] < self.amount:
+            #TODO replace with an HTTP error
+            raise ValueError("Not enough dosh")
+        
+        return True
+
 
 class Card(BaseModel, DbModel):
     number: int
