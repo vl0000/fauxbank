@@ -60,13 +60,13 @@ class AccountOut(BaseModel):
             It returns all the incoming ones by default
         """
         if incoming == False:
-            stmt = select(transactions.c.amount).where(transactions.c.payee == self.number)
-            return query(stmt).fetchall()
-        else:
             stmt = select(transactions.c.amount).where(transactions.c.payer == self.number)
             return query(stmt).fetchall()
+        else:
+            stmt = select(transactions.c.amount).where(transactions.c.payee == self.number)
+            return query(stmt).fetchall()
 
-    def _get_balance(self):
+    def get_balance(self):
         # all incoming transactions
         incoming = self._get_transactions()
         # Unpack them into a list of values instead of tuples
@@ -125,6 +125,7 @@ class AccountInDb(AccountAuth, AccountOut):
         """ This is the method you want to use if youre going to send this data to users """
         # Only the data from the second to the fifth element is to be used
         usr = AccountOut(**cls._get_user(number))
+        usr.balance = usr.get_balance()
         return usr
 
     def create(self):

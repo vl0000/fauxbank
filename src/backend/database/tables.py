@@ -10,7 +10,6 @@ accounts = Table(
     meta,
     Column("name", String(32), nullable=False),
     Column("number", Integer, unique=True, nullable=False, primary_key=True),
-    Column("balance", Float, default=0.0),
     Column("email", String(128), unique=True, nullable=False),
     # 60 characters is the maximum due to this column being intended for bcrypt
     Column("password", String(60), nullable=False),

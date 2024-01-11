@@ -10,3 +10,7 @@ router = APIRouter(prefix="/api")
 @router.post("/payments")
 def payments(user: Annotated[AccountOut, Depends(get_current_user)], transaction: Annotated[Transaction, Body()]):
     return transaction
+
+@router.get("/payments")
+def get_transactions(user: Annotated[AccountOut, Depends(get_current_user)]):
+    pass
