@@ -5,6 +5,8 @@ engine = create_engine("sqlite+pysqlite:///db.sqlite")
 
 meta = MetaData()
 
+#TODO make the account number the PK
+
 accounts = Table(
     "accounts",
     meta,

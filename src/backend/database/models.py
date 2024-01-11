@@ -1,6 +1,6 @@
 from os import environ
 from secrets import token_bytes, randbelow
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 from pydantic import BaseModel
 from database.tables import engine, accounts, cards, transactions
@@ -45,7 +45,7 @@ class AccountOut(BaseModel):
     name: str
     balance: float = 0.0
     agency: int = 1
-    number: int = randbelow(1, 9999999999)
+    number: int = randbelow(9999999999)
 
 class AccountAuth(BaseModel):
     """
@@ -62,7 +62,7 @@ class AccountAuth(BaseModel):
         with engine.connect() as conn:
             stmt = select(accounts).where(accounts.c.email == email)
             res = conn.execute(stmt).fetchone()._asdict()
-            return AccountInDb(**res)
+            return res
 
     @classmethod
     def authenticate(cls, email: str, password_in: str):
@@ -101,7 +101,7 @@ class AccountInDb(AccountAuth, AccountOut, DbModel):
     def get_user_safe(cls, email: str) -> AccountOut:
         """ This is the method you want to use if youre going to send this data to users """
         # Only the data from the second to the fifth element is to be used
-        usr = AccountOut(**cls._get_user())
+        usr = AccountOut(**cls._get_user(email))
         return usr
 
     def create(self):
