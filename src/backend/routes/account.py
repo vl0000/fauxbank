@@ -30,7 +30,7 @@ def login(response: Response,formData: Annotated[OAuth2PasswordRequestForm, Depe
     user = AccountInDb.authenticate(formData.username, formData.password)
     if user:
         # The email is the 5th element in the returned tuple
-        access_token = Token.generate_token(data={"sub": user.number})
+        access_token = Token.generate_token(data={"sub": f"{user['number']}"})
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -43,5 +43,5 @@ def signup(full_name: Annotated[str, Form()],email: Annotated[str, Form()], pass
     user = AccountInDb(full_name=full_name, email=email, password=password)
     user.create()
 
-    access_token = Token.generate_token(data={"sub": user.email})
+    access_token = Token.generate_token(data={"sub": f"{user['number']}"})
     return {"access_token": access_token, "token_type": "bearer"}

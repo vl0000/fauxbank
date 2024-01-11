@@ -44,10 +44,18 @@ class AccountOut(BaseModel):
     """
     name: str
     balance: float = 0.0
-    agency: int = 1
     number: int = randbelow(9999999999)
 
-class AccountAuth(BaseModel):
+class DbModel:
+    @classmethod
+    def _query(cls, stmt):
+            with engine.connect() as conn:
+                res = conn.execute(stmt)
+                conn.commit()
+                if res:
+                    return res
+
+class AccountAuth(BaseModel, DbModel):
     """
         Do not use for anything other than authentication. Not even output
     """
@@ -66,13 +74,15 @@ class AccountAuth(BaseModel):
 
     @classmethod
     def authenticate(cls, email: str, password_in: str):
-        usr = cls._get_user(email)
+        stmt = select(accounts).where(accounts.c.email == email)
+        usr = cls._query(stmt).fetchone()._asdict()
         if not usr:
             raise LookupError("No user found")
+
         
         #The password is the 7th element in the tuple and the salt the 8th
-        password_hash = usr.password
-        salt = usr.salt
+        password_hash = usr["password"]
+        salt = usr["salt"]
 
         # TODO return an output model
         if bcrypt.verify(password_in + salt, password_hash):
@@ -80,17 +90,8 @@ class AccountAuth(BaseModel):
         else:
             return None
 
-class DbModel:
-    @classmethod
-    def _query(cls, stmt):
-            with engine.connect() as conn:
-                res = conn.execute(stmt)
-                conn.commit()
-                if res:
-                    return res
 
-
-class AccountInDb(AccountAuth, AccountOut, DbModel):
+class AccountInDb(AccountAuth, AccountOut):
     """
         This class will contain all the necessary user information.
         Any database operations should be done through this class, regardless of
