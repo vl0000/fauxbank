@@ -57,10 +57,10 @@ class AccountAuth(BaseModel):
     salt: str = b64encode(token_bytes(16)).decode("utf-8")
 
     @classmethod
-    def _get_user(cls, email: str):
+    def _get_user(cls, number: int):
         """To be used by other methods ONLY and never send this to the user"""
         with engine.connect() as conn:
-            stmt = select(accounts).where(accounts.c.email == email)
+            stmt = select(accounts).where(accounts.c.number == number)
             res = conn.execute(stmt).fetchone()._asdict()
             return res
 
@@ -98,10 +98,10 @@ class AccountInDb(AccountAuth, AccountOut, DbModel):
         authenticate() method.
     """
     @classmethod
-    def get_user_safe(cls, email: str) -> AccountOut:
+    def get_user_safe(cls, number: str) -> AccountOut:
         """ This is the method you want to use if youre going to send this data to users """
         # Only the data from the second to the fifth element is to be used
-        usr = AccountOut(**cls._get_user(email))
+        usr = AccountOut(**cls._get_user(number))
         return usr
 
     def create(self):

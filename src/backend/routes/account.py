@@ -15,14 +15,13 @@ acc = {
 }
 
 def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> AccountOut:
-    email = Token.decode(token).get("sub")
-    user = AccountInDb.get_user_safe(email)
+    number = Token.decode(token).get("sub")
+    user = AccountInDb.get_user_safe(number)
     return user
 
-# This is a security issure right now, but this route wont even exist in the future anyways.
 # It is for testing purposes only
-@router.get("/{id}")
-def get_account(id: int | None, user: Annotated[AccountOut, Depends(get_current_user)]):
+@router.get("/{account_number}")
+def get_account(account_number: int | None, user: Annotated[AccountOut, Depends(get_current_user)]):
     response = user.model_dump()
     return JSONResponse(content=response)
 
@@ -31,7 +30,7 @@ def login(response: Response,formData: Annotated[OAuth2PasswordRequestForm, Depe
     user = AccountInDb.authenticate(formData.username, formData.password)
     if user:
         # The email is the 5th element in the returned tuple
-        access_token = Token.generate_token(data={"sub": user.email})
+        access_token = Token.generate_token(data={"sub": user.number})
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
