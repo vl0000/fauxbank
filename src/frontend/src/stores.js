@@ -7,7 +7,7 @@ const default_values = {
     full_name: "NOTHING",
     balance: 0.0,
     agency: 1,
-    account_number: 0
+    number: 0
 }
 
 async function get_account_data() {

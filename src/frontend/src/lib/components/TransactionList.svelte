@@ -33,7 +33,6 @@
         display: flex;
         flex-direction: column;
         border-radius: 32px 32px 0px 0px;
-        height: 35vh;
         grid-area: transactions;
         padding: 15px;
         
