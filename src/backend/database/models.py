@@ -204,15 +204,3 @@ class Transaction(BaseModel):
             raise LookupError("Missing a payer or payee")
         
         return True
-
-
-class Card(BaseModel):
-    number: int
-    holder: int
-    cvv: int
-    expiration: date
-
-    def create(self):
-        stmt = insert(cards).values(**self.model_dump())
-
-        query(stmt)
