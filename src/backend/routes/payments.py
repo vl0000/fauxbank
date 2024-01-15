@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from database.models import Token, TransactionIn, AccountOut, Transaction
-from fastapi import APIRouter, Depends, Body, Request
+from fastapi import APIRouter, Depends, Body, Request, HTTPException
 
 from .account import oauth2_scheme, get_current_user
 
@@ -13,11 +13,13 @@ async def transfer(user: Annotated[AccountOut, Depends(get_current_user)],paymen
     transaction.update({"payer": user.number})
     transaction = Transaction(**transaction)
     try:
-        transaction.is_valid()
+        transaction.create()
     except Exception as e:
         print(e)
+        raise HTTPException(406)
+    finally:
+        return "success"
 
-    return "hello"
 
 @router.get("/payments")
 def get_transactions(user: Annotated[AccountOut, Depends(get_current_user)]) -> list[tuple]:

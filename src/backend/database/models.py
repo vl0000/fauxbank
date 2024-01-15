@@ -2,7 +2,7 @@ from os import environ
 from secrets import token_bytes, randbelow
 from datetime import datetime, timedelta
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from database.tables import engine, accounts, transactions
 from sqlalchemy import insert, select, or_
 
@@ -163,9 +163,12 @@ class Transaction(BaseModel):
     amount: float = 0.0
     date: datetime | None = datetime.utcnow()
 
-    def _create(self):
-        stmt = insert(transactions).values(**self.model_dump())
-        query(stmt)
+    def create(self):
+        if self.is_valid():
+            stmt = insert(transactions).values(**self.model_dump())
+            query(stmt)
+        else:
+            raise ValidationError
     
     @classmethod
     def get_all(cls):
