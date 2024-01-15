@@ -1,3 +1,7 @@
+<script>
+    import { account } from "../../stores"
+</script>
+
 <div class="credit-card">
     <div id="card-info">
         <div id="chip">
@@ -7,7 +11,7 @@
         </div>
         <small style="grid-area: exp">12/28</small>
         <span  style="grid-area: number; text-align: left;">****  ****  ****  1234</span>
-        <strong style="grid-area: name; text-align: left;">Fulano de tal</strong>
+        <strong style="grid-area: name; text-align: left;">{$account.name} | {$account.number}</strong>
         <div style="height: 40px; width: 100%; grid-area: logo;">
             <svg width="40" height="30" viewBox="0 0 171 108" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="54" cy="54" r="54" fill="#F14646"/>

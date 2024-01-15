@@ -10,10 +10,6 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/account/token")
 
 router = APIRouter(prefix="/api/account")
 
-acc = {
-    "full_name": "fulano"
-}
-
 def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> AccountOut:
     try:
         number = Token.decode(token).get("sub")

@@ -4,7 +4,7 @@ import { Preferences } from "@capacitor/preferences";
 export const api_url = "http://localhost:8000"
 // Everything in this file is temporary
 const default_values = {
-    full_name: "NOTHING",
+    name: "NOTHING",
     balance: 0.0,
     agency: 1,
     number: 0
