@@ -1,9 +1,9 @@
 from os import environ
 from secrets import token_bytes, randbelow
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 
 from pydantic import BaseModel
-from database.tables import engine, accounts, cards, transactions
+from database.tables import engine, accounts, transactions
 from sqlalchemy import insert, select, or_
 
 from jose import JWTError, jwt
@@ -139,7 +139,9 @@ class AccountInDb(AccountAuth, AccountOut):
 
     def create(self):
         temp_model = self.model_dump()
+        del temp_model['balance']
         temp_model['password'] = hash_password(temp_model['password'], temp_model['salt'])
+        print(len(temp_model['salt']))
         stmt = insert(accounts).values(**temp_model)
 
         query(stmt)

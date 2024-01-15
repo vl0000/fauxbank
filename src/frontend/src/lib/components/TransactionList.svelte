@@ -9,15 +9,12 @@
 <div class="transactions">
     <div id="title">
         <span>Latest Transactions</span>
-        <a href="/"> Show all</a>
     </div>
     <ul id="transaction-list">
         {#each transactions as transaction}
             <li>
                 <div class="info">
-                    <div class="icon">
-                        <!-- The SVG goes here-->
-                    </div>
+                   
                     <span>YOU BOUGHT SOMETHING HUH</span>
                 </div>
                 <div class="movement">
