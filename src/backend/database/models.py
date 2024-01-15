@@ -141,7 +141,6 @@ class AccountInDb(AccountAuth, AccountOut):
         temp_model = self.model_dump()
         del temp_model['balance']
         temp_model['password'] = hash_password(temp_model['password'], temp_model['salt'])
-        print(len(temp_model['salt']))
         stmt = insert(accounts).values(**temp_model)
 
         query(stmt)
