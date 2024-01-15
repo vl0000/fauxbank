@@ -2,6 +2,7 @@
     import { CameraPreview} from "@capacitor-community/camera-preview"
     import QrScanner from "qr-scanner"
     import { onMount } from "svelte"
+    import { api_url } from "../../stores"
 
     let decoded = "Awaiting"
 
@@ -21,12 +22,28 @@
 
 
 
-        QrScanner.scanImage(image)
-        .then(result => decoded = JSON.parse(result).amount)
+        data = await QrScanner.scanImage(image)
+        .then(result => decoded = JSON.parse(result))
         .catch(err => decoded = err)
 
 
+        await fetch(api_url + "/api/payments", 
+        {
+            method: 'POST',
+                headers: {
+                    cors: "no-cors",
+                    "Content-Type": "application/json",
+                    "Authorization": await Preferences.get({key: "jwt"}).then( (token) => token.value)
+                },
 
+            body: JSON.stringify(
+                {
+                    "payee": data.payee,
+                    "amount": data.amount
+                }
+            )
+        }
+        )
 
 
     }

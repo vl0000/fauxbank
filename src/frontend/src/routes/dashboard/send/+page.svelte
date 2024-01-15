@@ -7,7 +7,6 @@
 
     async function handleSubmit() {
         // Handle form submission logic
-        console.log('sent');
         await Preferences.get({key: "jwt"}).then(token => console.log(token))
         let resp = await fetch(
             api_url + "/api/payments",
@@ -22,7 +21,13 @@
 
                 body: JSON.stringify({"payee": payee, "amount": inputValue})
             }
-        ).then(res => console.log(res.json()))
+        )
+        .then(res => console.log(res.json()))
+        .then(
+            () => window.location.href = "/dashboard"
+        ).catch(
+            () => window.location.href = "/failure"
+        )
     }
 
     function handleClear() {

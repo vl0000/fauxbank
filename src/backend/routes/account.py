@@ -15,7 +15,11 @@ acc = {
 }
 
 def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> AccountOut:
-    number = Token.decode(token).get("sub")
+    try:
+        number = Token.decode(token).get("sub")
+    except:
+        raise HTTPException(401, "Expired token")
+
     user = AccountInDb.get_user_safe(number)
     return user
 

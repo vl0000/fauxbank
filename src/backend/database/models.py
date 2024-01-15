@@ -87,6 +87,9 @@ class AccountAuth(BaseModel):
     """
         Do not use for anything other than authentication. Not even output
     """
+    # There is no email validation because it wont really be used for this project.
+    # It's scope has been reduced in order to finish it quickly.
+    # There will be no email confirmations anymore.
     email: str
     password: str
     # If the salt isnt turned into a string, it cannot be appended to the password later
