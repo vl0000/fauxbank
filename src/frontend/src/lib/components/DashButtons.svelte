@@ -21,37 +21,29 @@
             <path d="M12 9h2V8h-2z"/>
           </svg>
     </a>
-    <a href="/" class="button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-credit-card-2-back" viewBox="0 0 16 16">
-            <path d="M11 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5z"/>
-            <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm13 2v5H1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1m-1 9H2a1 1 0 0 1-1-1v-1h14v1a1 1 0 0 1-1 1"/>
-          </svg>
-    </a>
             
 </div>
 
 <style>
     .dash-buttons{
-        overflow-x: auto;
-
         display: grid;
-        grid-template-columns: repeat(4, auto);
+        grid-template-columns: repeat(3, auto);
         column-gap: 12px;
         grid-template-rows: auto;
         padding-left: 10px;
         box-sizing: content-box;
         grid-area: dashbuttons;
         height: 100%;
-        max-width: 100vw;
         max-height: 90px;
+        padding-left: 15px;
 
         scrollbar-width: none;
     }
     .dash-buttons::-webkit-scrollbar {
         display: none;
     }
-    .dash-buttons:last-child {
-        padding-right: 10px;
+    .dash-buttons:first-child {
+        padding-left: 10px;
     }
     .button {
         grid-area: auto;

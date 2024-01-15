@@ -21,6 +21,13 @@ async function get_account_data() {
             }
         }
     ).then(resp => resp.json())
+    .then(
+        resp => {
+            if (resp.detail === "Expired token") {
+                window.location.href = "/expired"
+            }
+        }
+    )
     console.log(resp)
     return resp
 }
