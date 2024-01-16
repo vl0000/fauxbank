@@ -13,7 +13,14 @@ john = {
     "password": "poughkeepsie"
 }
 payment = {
+    "id": 1,
     "payer": 321,
     "payee": 1234,
     "amount": 100.0
 }
+
+def query(stmt):
+    with engine.connect() as conn:
+        res = conn.execute(stmt)
+        if res:
+            return res
