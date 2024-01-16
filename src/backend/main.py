@@ -7,11 +7,8 @@ app = FastAPI()
 app.include_router(account.router)
 app.include_router(payments.router)
 
-# Temporary and for TESTING PURPOSES ONLY!!!!
-# TODO Fix this.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"]
+    allow_methods=["Options"],
+    allow_headers=["Authorization"]
 )
