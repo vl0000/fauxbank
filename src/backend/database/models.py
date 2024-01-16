@@ -137,7 +137,7 @@ class AccountInDb(AccountAuth, AccountOut):
         usr.balance = usr.get_balance()
         return usr
 
-    def _secure_password(self) -> str:
+    def _secure_password(self):
         self.password = hash_password(self.password, self.salt)
 
     def create(self):
