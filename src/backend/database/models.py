@@ -137,20 +137,17 @@ class AccountInDb(AccountAuth, AccountOut):
         usr.balance = usr.get_balance()
         return usr
 
+    def _secure_password(self) -> str:
+        self.password = hash_password(self.password, self.salt)
+
     def create(self):
+        self._secure_password()
         temp_model = self.model_dump()
         del temp_model['balance']
-        temp_model['password'] = hash_password(temp_model['password'], temp_model['salt'])
         stmt = insert(accounts).values(**temp_model)
 
         query(stmt)
     
-    def get_card(self):
-        stmt = select(cards).where(cards.c.holder == self.id)
-        res = query(stmt)
-        return res.fetchone()._asdict()
-    
-
 
 class TransactionIn(BaseModel):
     payee: int
