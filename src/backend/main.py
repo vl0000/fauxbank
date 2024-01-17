@@ -12,3 +12,7 @@ app.add_middleware(
     allow_methods=["Options"],
     allow_headers=["Authorization"]
 )
+
+@app.get("/")
+def test_route():
+    return {"Hello": "World!"}
