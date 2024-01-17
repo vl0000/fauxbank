@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Union
 
 from database.models import AccountInDb, Token, AccountOut
 
@@ -21,7 +21,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> AccountOu
 
 # It is for testing purposes only
 @router.get("/{account_number}")
-def get_account(account_number: int | None, user: Annotated[AccountOut, Depends(get_current_user)]):
+def get_account(account_number: Union[int, None], user: Annotated[AccountOut, Depends(get_current_user)]):
     response = user.model_dump()
     return JSONResponse(content=response)
 

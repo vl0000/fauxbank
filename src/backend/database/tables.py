@@ -1,9 +1,7 @@
 from os import environ
 from sqlalchemy import MetaData, Table, Column, BigInteger, String, Float, ForeignKey, DateTime, Index, create_engine
 
-DB_ADDRESS = f"{environ['DB_ADDR']}:{environ['DB_PORT']}"
-
-engine = create_engine(f"postgresql+psycopg://postgres:{environ['PG_KEY']}@{DB_ADDRESS}/postgres")
+engine = create_engine(environ["POSTGRES_URL"])
 
 
 meta = MetaData()

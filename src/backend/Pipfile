@@ -10,7 +10,7 @@ python-multipart = "*"
 passlib = "*"
 python-jose = {extras = ["cryptography"], version = "*"}
 sqlalchemy = "*"
-psycopg = "*"
+pg8000 = "*"
 
 [dev-packages]
 
