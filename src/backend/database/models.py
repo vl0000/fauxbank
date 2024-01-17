@@ -1,6 +1,7 @@
 from os import environ
 from secrets import token_bytes, randbelow
 from datetime import datetime, timedelta
+from typing import Union
 
 from pydantic import BaseModel, ValidationError
 from database.tables import engine, accounts, transactions
@@ -154,11 +155,11 @@ class TransactionIn(BaseModel):
     amount: float
     
 class Transaction(BaseModel):
-    id: int | None = None
+    id: Union[int, None] = None
     payer: int
     payee: int
     amount: float = 0.0
-    date: datetime | None = datetime.utcnow()
+    date: Union[datetime, None] = datetime.utcnow()
 
     def create(self):
         if self.is_valid():
