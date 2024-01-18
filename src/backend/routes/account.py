@@ -15,7 +15,7 @@ router = APIRouter(prefix="/api/account")
 def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> AccountOut:
     try:
         number = Token.decode(token).get("sub")
-        user = AccountInDb.get_user_safe(number)
+        user = AccountInDb.get_user_safe(int(number))
     except JWTError:
         raise HTTPException(status_code=401, detail="Expired token")
     except LookupError:
