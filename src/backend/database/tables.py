@@ -1,7 +1,7 @@
 from os import environ
 from sqlalchemy import MetaData, Table, Column, BigInteger, String, Float, ForeignKey, DateTime, Index, create_engine
 
-engine = create_engine(environ["POSTGRES_URL"])
+engine = create_engine(environ["POSTGRES_URL"], connect_args={"sslmode": "require"})
 
 
 meta = MetaData()
