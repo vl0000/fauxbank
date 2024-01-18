@@ -3,7 +3,7 @@ from secrets import token_bytes, randbelow
 from datetime import datetime, timedelta
 from typing import Union
 
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel
 from database.tables import engine, accounts, transactions
 from sqlalchemy import insert, select, or_
 
@@ -141,6 +141,11 @@ class AccountInDb(AccountAuth, AccountOut):
     def _secure_password(self):
         self.password = hash_password(self.password, self.salt)
 
+    def _get_user_by_email(self, email):
+        stmt = select(accounts).where(accounts.c.email == email)
+        res = query(stmt)
+        return res.fetchone()
+
     def create(self):
         self._secure_password()
         temp_model = self.model_dump()
@@ -148,7 +153,7 @@ class AccountInDb(AccountAuth, AccountOut):
         stmt = insert(accounts).values(**temp_model)
 
         query(stmt)
-    
+
 
 class TransactionIn(BaseModel):
     payee: int
@@ -166,7 +171,7 @@ class Transaction(BaseModel):
             stmt = insert(transactions).values(**self.model_dump())
             query(stmt)
         else:
-            raise ValidationError
+            raise ValueError("Invalid Transaction")
     
     @classmethod
     def get_all(cls):

@@ -5,7 +5,7 @@ from database.models import AccountInDb, Token, AccountOut
 from fastapi import APIRouter, Query, Form, Depends, HTTPException
 from fastapi.responses import JSONResponse, Response
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-
+from sqlalchemy.exc import IntegrityError
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/account/token")
 
 router = APIRouter(prefix="/api/account")
@@ -26,11 +26,10 @@ def get_account(user: Annotated[AccountOut, Depends(get_current_user)]):
 
 @router.post("/token", response_model=Token)
 def login(response: Response,formData: Annotated[OAuth2PasswordRequestForm, Depends()]):
-    user = AccountInDb.authenticate(formData.username, formData.password)
-    if user:
-        # The email is the 5th element in the returned tuple
-        access_token = Token.generate_token(data={"sub": f"{user['number']}"})
-    else:
+    try:
+        user = AccountInDb.authenticate(formData.username, formData.password)
+        access_token = Token.generate_token(data={"sub": f"{user.number}"})
+    except LookupError:
         raise HTTPException(status_code=404, detail="User not found")
 
     return {"access_token": access_token, "token_type": "bearer"}
@@ -39,8 +38,15 @@ def login(response: Response,formData: Annotated[OAuth2PasswordRequestForm, Depe
 def signup(name: Annotated[str, Form()],email: Annotated[str, Form()], password: Annotated[str, Form()]):
 
     #TODO Implement validation
-    user = AccountInDb(name=name, email=email, password=password)
-    user.create()
+    try:
+        user = AccountInDb(name=name, email=email, password=password)
+        user.create()
 
-    access_token = Token.generate_token(data={"sub": f"{user['number']}"})
+    except TypeError as e:
+        print(e)
+        raise HTTPException(422, "Could not serialise data")
+    except IntegrityError:
+        raise HTTPException(409, "This user already exists")
+
+    access_token = Token.generate_token(data={"sub": f"{user.number}"})
     return {"access_token": access_token, "token_type": "bearer"}
