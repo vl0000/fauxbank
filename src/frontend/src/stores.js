@@ -15,6 +15,7 @@ async function get_account_data() {
         api_url + "/api/account/me",
         {
             headers: {
+                cors: "no-cors",
                 "Authorization": await Preferences.get({key: "jwt"}).then( (token) => token.value)
             }
         }
