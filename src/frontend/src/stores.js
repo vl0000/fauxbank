@@ -1,7 +1,7 @@
 import { readable } from "svelte/store";
 import { Preferences } from "@capacitor/preferences";
 
-export const api_url = "http://localhost:8000"
+export const api_url = "https://fauxbank.vercel.app"
 // Everything in this file is temporary
 const default_values = {
     name: "NOTHING",
@@ -12,7 +12,7 @@ const default_values = {
 
 async function get_account_data() {
     let resp = await fetch(
-        "http://localhost:8000/api/account/1",
+        api_url + "/api/account/me",
         {
             method: "GET",
             headers: {

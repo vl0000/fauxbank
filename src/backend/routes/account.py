@@ -36,7 +36,7 @@ def login(response: Response,formData: Annotated[OAuth2PasswordRequestForm, Depe
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.post("/signup", response_model=Token)
-def signup(full_name: Annotated[str, Form()],email: Annotated[str, Form()], password: Annotated[str, Form()]):
+def signup(name: Annotated[str, Form()],email: Annotated[str, Form()], password: Annotated[str, Form()]):
 
     #TODO Implement validation
     user = AccountInDb(full_name=full_name, email=email, password=password)

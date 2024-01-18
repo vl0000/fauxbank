@@ -4,6 +4,6 @@
 
     // check for a valid session
     onMount(() => {
-        goto('/dashboard')
+        goto('/account')
     })
 </script>

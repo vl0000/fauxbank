@@ -24,7 +24,8 @@
       } catch (error) {
         console.error('Error:', error);
       } finally {
-        window.location.href = "/dashboard";
+        console.log(endpoint)
+        console.log('done')
       }
     }
 
@@ -35,7 +36,6 @@
         <input type="text" name="name" id="name" placeholder="Your Name" class="form-input" required>
         <input type="email" name="email" id="email" class="form-input" placeholder="Email" required>
         <input type="password" name="password" class="form-input" placeholder="Password" required>
-        <input type="password" name="confirm" placeholder="Confirm Password" class="form-input" required/>
         <div id="button-container">
           <input type="submit" value="Sign Up" id="login-btn">
           <a href="/account">Or Login</a>
