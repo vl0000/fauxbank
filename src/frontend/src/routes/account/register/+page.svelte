@@ -1,7 +1,7 @@
 <script>
     import { Preferences } from "@capacitor/preferences";
     import { api_url } from "../../../stores";
-    const endpoint = api_url + "/api/account/token"
+    const endpoint = api_url + "/api/account/signup"
 
     let form;
 
