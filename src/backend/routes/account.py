@@ -19,8 +19,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> AccountOu
     user = AccountInDb.get_user_safe(number)
     return user
 
-# It is for testing purposes only
-@router.get("/{account_number}")
+@router.get("/me")
 def get_account(account_number: Union[int, None], user: Annotated[AccountOut, Depends(get_current_user)]):
     response = user.model_dump()
     return JSONResponse(content=response)
