@@ -39,7 +39,7 @@ def login(response: Response,formData: Annotated[OAuth2PasswordRequestForm, Depe
 def signup(name: Annotated[str, Form()],email: Annotated[str, Form()], password: Annotated[str, Form()]):
 
     #TODO Implement validation
-    user = AccountInDb(full_name=full_name, email=email, password=password)
+    user = AccountInDb(name=name, email=email, password=password)
     user.create()
 
     access_token = Token.generate_token(data={"sub": f"{user['number']}"})
