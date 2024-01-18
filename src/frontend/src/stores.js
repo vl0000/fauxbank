@@ -14,9 +14,8 @@ async function get_account_data() {
     let resp = await fetch(
         api_url + "/api/account/me",
         {
-            method: "GET",
             headers: {
-                Authorization: await Preferences.get({key: "jwt"}).then( (token) => token.value)
+                "Authorization": await Preferences.get({key: "jwt"}).then( (token) => token.value)
             }
         }
     ).then(resp => resp.json())
@@ -26,7 +25,7 @@ async function get_account_data() {
                 window.location.href = "/expired"
             }
         }
-    )
+    ).catch(err => console.log(err))
     console.log(resp)
     return resp
 }

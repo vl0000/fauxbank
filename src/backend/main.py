@@ -10,6 +10,7 @@ app.include_router(payments.router)
 
 app.add_middleware(
     CORSMiddleware,
+    allow_origin=["*"],
     allow_methods=["Options"],
     allow_headers=["Authorization"]
 )
