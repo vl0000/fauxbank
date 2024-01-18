@@ -6,6 +6,8 @@ from fastapi import APIRouter, Query, Form, Depends, HTTPException
 from fastapi.responses import JSONResponse, Response
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.exc import IntegrityError
+from jose import JWTError
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/account/token")
 
 router = APIRouter(prefix="/api/account")
@@ -13,10 +15,12 @@ router = APIRouter(prefix="/api/account")
 def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> AccountOut:
     try:
         number = Token.decode(token).get("sub")
-    except:
-        raise HTTPException(401, "Expired token")
+        user = AccountInDb.get_user_safe(number)
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Expired token")
+    except LookupError:
+        raise HTTPException(status_code=404, detail="User not found")
 
-    user = AccountInDb.get_user_safe(number)
     return user
 
 @router.get("/me")

@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from database.tables import engine, accounts, transactions
 from sqlalchemy import insert, select, or_
 
-from jose import JWTError, jwt
+from jose import jwt
 from passlib.hash import bcrypt
 from base64 import b64encode
 
@@ -101,8 +101,10 @@ class AccountAuth(BaseModel):
         """To be used by other methods ONLY and never send this to the user"""
         with engine.connect() as conn:
             stmt = select(accounts).where(accounts.c.number == number)
-            res = conn.execute(stmt).fetchone()._asdict()
-            return res
+            res = conn.execute(stmt).fetchone()
+            if not res:
+                raise LookupError("User not found")
+            return res._asdict()
 
     @classmethod
     def authenticate(cls, email: str, password_in: str):
