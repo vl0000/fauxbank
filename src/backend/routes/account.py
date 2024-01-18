@@ -28,7 +28,7 @@ def get_account(user: Annotated[AccountOut, Depends(get_current_user)]):
 def login(response: Response,formData: Annotated[OAuth2PasswordRequestForm, Depends()]):
     try:
         user = AccountInDb.authenticate(formData.username, formData.password)
-        access_token = Token.generate_token(data={"sub": f"{user.number}"})
+        access_token = Token.generate_token(data={"sub": f"{user['number']}"})
     except LookupError:
         raise HTTPException(status_code=404, detail="User not found")
 
