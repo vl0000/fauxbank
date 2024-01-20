@@ -1,9 +1,9 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.fauxbank',
+  appId: 'ionic.fauxbank',
   appName: 'fauxbank',
-  webDir: 'build',
+  webDir: 'dist',
   server: {
     androidScheme: 'https'
   }
