@@ -1,38 +1,82 @@
 <template>
-<ion-grid>
+<ion-page>
+  <ion-content>
 
-  <ion-row>
-    <ion-col size="12">
-      <ion-input fill="outline" label="Email" label-placement="floating" placeholder="johndoe@example.com" type="email"></ion-input>
-    </ion-col>
-  </ion-row>
+    <ion-grid>
 
-  <ion-row>
-      <ion-col size="12">
-        <ion-input fill="outline" label="Password" label-placement="floating" placeholder="Your password" type="password"></ion-input>
-      </ion-col>
-    </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <ion-input v-model="email" fill="outline" label="Email" label-placement="floating" placeholder="johndoe@example.com" type="email"></ion-input>
+        </ion-col>
+      </ion-row>
 
-    <ion-row>
-      <ion-col size="6">
-        <a>Or create an account</a>
-      </ion-col>
-      <ion-col size="5">
-        <ion-button>Login</ion-button>
-      </ion-col>
-    </ion-row>
-</ion-grid>
+      <ion-row>
+        <ion-col size="12">
+          <ion-input v-model="password" fill="outline" label="Password" label-placement="floating" placeholder="Your password" type="password"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="6">
+          <a>Or create an account</a>
+        </ion-col>
+        <ion-col size="5">
+          <ion-button @click="print_inputs">Login</ion-button>
+        </ion-col>
+      </ion-row>
+      
+
+    </ion-grid>
+
+  </ion-content>
+</ion-page>
+
 
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import {
   IonInput,
   IonGrid,
   IonRow,
   IonCol,
-  IonButton
+  IonButton,
+  IonPage,
+  IonContent
 } from '@ionic/vue';
+import router from '@/router';
+
+async function print_inputs() {
+  const form = new FormData();
+  //This is needed due to Oauth2
+  form.append("username", email)
+  form.append("password", password)
+
+  let response = await fetch(
+    "http://127.0.0.1:8000/api/accounts",
+    {
+      method: "POST",
+      body: form
+    }
+    )
+    .then(response => response.json())
+    .then(
+      response => {
+        if (response.status == 200) {
+          // STORE THE JWT KEY SOMEWHERE
+          router.push("/dashboard")
+        } 
+      }
+    )
+    .catch(err => { console.error(err) })
+}
+
+
+let email: string;
+let password: string;
+
+
 </script>
 
 <style scoped>

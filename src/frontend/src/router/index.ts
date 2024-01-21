@@ -3,6 +3,10 @@ import { RouteRecordRaw } from 'vue-router';
 import HomePage from '../views/HomePage.vue'
 import LoginPageVue from '@/views/LoginPage.vue';
 import SignupPageVue from '@/views/SignupPage.vue';
+import DashboardVue from '@/views/Dashboard.vue';
+import SendVue from '@/views/Send.vue';
+import ReceiveVue from '@/views/Receive.vue';
+import MainVue from '@/views/Main.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -23,6 +27,26 @@ const routes: Array<RouteRecordRaw> = [
     path:"/signup",
     name:"Signup",
     component: SignupPageVue
+  },
+  {
+    path:"/dashboard",
+    name:"Dashboard",
+    component: DashboardVue
+  },
+  {
+    path:"/send",
+    name: "Send",
+    component: SendVue
+  },
+  {
+    path:"/receive",
+    name: "Receive",
+    component: ReceiveVue
+  },
+  {
+    path:"/main",
+    name:"Main",
+    component: MainVue
   }
 ]
 
