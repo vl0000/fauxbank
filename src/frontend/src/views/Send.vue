@@ -80,7 +80,6 @@ ion-router-outlet {
     justify-content: center;
 }
 ion-grid {
-  position: absolute;
-  top: 40%;
+  margin-top: 50%;
 }
 </style>
