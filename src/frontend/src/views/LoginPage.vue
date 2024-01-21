@@ -18,7 +18,8 @@
 
       <ion-row>
         <ion-col size="6">
-          <a>Or create an account</a>
+          <!-- This link is temporary !!!!!!!!!!!-->
+          <ion-button router-link="/dashboard" fill="clear">Create an account</ion-button>
         </ion-col>
         <ion-col size="5">
           <ion-button @click="login">Login</ion-button>
@@ -43,7 +44,7 @@ import {
   IonCol,
   IonButton,
   IonPage,
-  IonContent
+  IonContent,
 } from '@ionic/vue';
 import router from '@/router';
 

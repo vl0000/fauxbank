@@ -7,6 +7,7 @@ import DashboardVue from '@/views/Dashboard.vue';
 import SendVue from '@/views/Send.vue';
 import ReceiveVue from '@/views/Receive.vue';
 import MainVue from '@/views/Main.vue';
+import ScanVue from '@/views/Scan.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -45,8 +46,13 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path:"/main",
-    name:"Main",
+    name: "Main",
     component: MainVue
+  },
+  {
+    path:"/scan",
+    name: "Scan",
+    component: ScanVue
   }
 ]
 

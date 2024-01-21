@@ -87,7 +87,7 @@
       </ion-row>
 
           <ion-fab>
-            <ion-fab-button>
+            <ion-fab-button router-link="/scan" router-direction="forward">
               <ion-icon :icon="qrCodeOutline"></ion-icon>
             </ion-fab-button>
           </ion-fab>
