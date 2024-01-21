@@ -45,11 +45,6 @@ const routes: Array<RouteRecordRaw> = [
     component: ReceiveVue
   },
   {
-    path:"/main",
-    name: "Main",
-    component: MainVue
-  },
-  {
     path:"/scan",
     name: "Scan",
     component: ScanVue

@@ -47,6 +47,7 @@ import {
   IonContent,
 } from '@ionic/vue';
 import router from '@/router';
+import { store } from '@/store';
 
 async function login() {
   const form = new FormData();
@@ -55,7 +56,7 @@ async function login() {
   form.append("password", password)
 
   let response = await fetch(
-    "http://127.0.0.1:8000/api/accounts",
+    store.api + "/api/accounts",
     {
       method: "POST",
       body: form
