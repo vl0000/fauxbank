@@ -21,7 +21,7 @@
         </ion-row>
         <ion-row>
           <ion-col size="12">
-          <ion-input v-model="transaction.amount" fill="outline" label="Ammount" label-placement="floating" placeholder="00.00" type="number"></ion-input>
+          <ion-input v-model="transaction.amount" fill="outline" label="Amount" label-placement="floating" placeholder="00.00" type="number"></ion-input>
           </ion-col>
         </ion-row>
 
@@ -78,5 +78,9 @@ ion-router-outlet {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+ion-grid {
+  position: absolute;
+  top: 40%;
 }
 </style>
