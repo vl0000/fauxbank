@@ -19,7 +19,7 @@
       <ion-row>
         <ion-col size="6">
           <!-- This link is temporary !!!!!!!!!!!-->
-          <ion-button router-link="/dashboard" fill="clear">Create an account</ion-button>
+          <ion-button router-link="/signup" fill="clear">Create an account</ion-button>
         </ion-col>
         <ion-col size="5">
           <ion-button @click="login">Login</ion-button>

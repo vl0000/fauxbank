@@ -1,39 +1,46 @@
 <template>
-    <ion-grid>
-      <ion-row>
-        <ion-col size="12">
-          <ion-input fill="outline" label="Name" label-placement="floating" placeholder="John Doe" type="text"></ion-input>
-        </ion-col>
-      </ion-row>
+  <ion-page>
+    <ion-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12">
+            <ion-input fill="outline" label="Name" label-placement="floating" placeholder="John Doe" type="text"></ion-input>
+          </ion-col>
+        </ion-row>
 
-      <ion-row>
-        <ion-col size="12">
-          <ion-input fill="outline" label="Email" label-placement="floating" placeholder="johndoe@example.com" type="email"></ion-input>
-        </ion-col>
-      </ion-row>
-  
-      <ion-row>
-        <ion-col size="12">
-          <ion-input fill="outline" label="Password" label-placement="floating" placeholder="Your password" type="password"></ion-input>
-        </ion-col>
-      </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <ion-input fill="outline" label="Email" label-placement="floating" placeholder="johndoe@example.com" type="email"></ion-input>
+          </ion-col>
+        </ion-row>
+    
+        <ion-row>
+          <ion-col size="12">
+            <ion-input fill="outline" label="Password" label-placement="floating" placeholder="Your password" type="password"></ion-input>
+          </ion-col>
+        </ion-row>
 
-      <ion-row>
-        <ion-col size="12">
-          <ion-input fill="outline" label="Confirm Password" label-placement="floating" placeholder="Confirm your password" type="password"></ion-input>
-        </ion-col>
-      </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <ion-input fill="outline" label="Confirm Password" label-placement="floating" placeholder="Confirm your password" type="password"></ion-input>
+          </ion-col>
+        </ion-row>
 
-      <ion-row>
-        <ion-col size="6">
-          <a>Or login</a>
-        </ion-col>
-        <ion-col size="5">
-          <ion-button>Register</ion-button>
-        </ion-col>
-      </ion-row>
-  
-    </ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-button fill="clear" router-link="/login" >Or login</ion-button>
+          </ion-col>
+          <ion-col size="5">
+            <ion-button>Register</ion-button>
+          </ion-col>
+        </ion-row>
+    
+      </ion-grid>
+    </ion-content>
+  </ion-page>
+
+
+
 </template>
 
 <script setup lang="ts">
@@ -42,7 +49,9 @@ import {
   IonGrid,
   IonRow,
   IonCol,
-  IonButton
+  IonButton,
+  IonPage,
+  IonContent
 } from '@ionic/vue';
 </script>
 
