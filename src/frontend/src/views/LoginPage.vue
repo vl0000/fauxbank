@@ -21,7 +21,7 @@
           <a>Or create an account</a>
         </ion-col>
         <ion-col size="5">
-          <ion-button @click="print_inputs">Login</ion-button>
+          <ion-button @click="login">Login</ion-button>
         </ion-col>
       </ion-row>
       
@@ -47,7 +47,7 @@ import {
 } from '@ionic/vue';
 import router from '@/router';
 
-async function print_inputs() {
+async function login() {
   const form = new FormData();
   //This is needed due to Oauth2
   form.append("username", email)

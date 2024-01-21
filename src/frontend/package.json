@@ -21,6 +21,7 @@
     "@ionic/vue": "^7.0.0",
     "@ionic/vue-router": "^7.0.0",
     "ionicons": "^7.0.0",
+    "qrcode": "^1.5.3",
     "vue": "^3.3.0",
     "vue-router": "^4.2.0"
   },
