@@ -14,11 +14,11 @@ async def transfer(user: Annotated[AccountOut, Depends(get_current_user)],paymen
     transaction = Transaction(**transaction)
     try:
         transaction.create()
+        return "success"
     except Exception as e:
         print(e)
         raise HTTPException(406)
-    finally:
-        return "success"
+
 
 
 @router.get("/payments")
