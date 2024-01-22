@@ -5,9 +5,12 @@ export async function makeTransaction(transaction: Object) {
     let response = await fetch(store.api + "/api/payments",
         {
             method: "POST",
-            headers: { Authorization: store.jwt },
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: store.jwt
+            },
             // expected format { payee: int, amount: float }
-            body: transaction
+            body: JSON.stringify(transaction)
         }
         )
         .then(res => res.json())

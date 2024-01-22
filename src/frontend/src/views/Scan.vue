@@ -1,6 +1,6 @@
 <template>
-  <ion-page>
-    <ion-content>
+  <ion-page class="transparent">
+    <ion-content class="transparent">
       <div id="camera"></div>
       <ion-button fill="outline" size="large" id="scan-button" @click="handleScan">Scan</ion-button>
     </ion-content>
@@ -53,7 +53,7 @@
   }
 
   onMounted(
-    () => CameraPreview.start({parent: "camera"})
+    () => CameraPreview.start({parent: "camera", toBack: true})
   )
   
   // Stop the camera whenever the back button is pressed.
@@ -69,5 +69,11 @@
     bottom: 40px;
     left: 50%;
 
+  }
+  #camera {
+    background-color: transparent;
+  }
+  .transparent {
+    background-color: transparent;
   }
 </style>

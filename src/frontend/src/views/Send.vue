@@ -59,12 +59,10 @@ let transaction = {
 }
 
 async function handleSend() {
-  let response = await makeTransaction(transaction)
+  await makeTransaction(transaction)
+    .catch(err => console.log(err))
 
-  if (response.status == 200) {
-    //make a success view
-    router.back()
-  }
+  router.back()
 }
 
 </script>

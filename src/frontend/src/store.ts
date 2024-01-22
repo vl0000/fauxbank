@@ -4,7 +4,7 @@ const api_address = "";
 
 export const store = reactive(
     {
-        api: "https://fauxbank.vercel.app",
+        api: "http://127.0.0.1:8000",
         jwt: "",
         account: {
             name: "loggedout",
