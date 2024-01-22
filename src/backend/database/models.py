@@ -162,7 +162,6 @@ class TransactionIn(BaseModel):
     amount: float
     
 class Transaction(BaseModel):
-    id: Union[int, None] = None
     payer: int
     payee: int
     amount: float = 0.0
@@ -204,7 +203,6 @@ class Transaction(BaseModel):
         # These functions will raise exceptions by themselves, in case one or neither exists
         payer = self._get_payer()
         payee = self._get_payee()
-        print(payer)
 
         if payer.get_balance() < self.amount:
             #TODO replace with an HTTP error
