@@ -17,7 +17,7 @@
           </ion-card-header>
           
             <ion-card-content>
-              R$ 250.00
+              $ {{ store.account.balance  }}
             </ion-card-content>
 
           </ion-card>
@@ -35,7 +35,7 @@
                 <span>FLAG</span>
               </div>
               <div class="card-info">
-                <span>Name | 000000</span>
+                <span>{{ store.account.name }} | {{ store.account.number }}</span>
                 <span>12/28</span>
               </div>
             </ion-card-content>
@@ -71,12 +71,13 @@
 
             <ion-card-content>
               <ion-list>
-                <ion-item>
+                <ion-item v-for="transaction in store.transactions">
                   <ion-label>
-                    <h2>Movement</h2>
-                    <p>Today</p>
+                    <h2>Transference</h2>
+                    <p>{{ new Date(transaction[4]).toLocaleString("en-GB") }}</p>
                   </ion-label>
-                  <small class="negative">R$ -12.57</small>
+                  <small v-if="transaction[1] == store.account.number" class="negative">$ -{{ transaction[3] }}</small>
+                  <small v-else class="positive">$ +{{ transaction[3] }}</small>
                 </ion-item>
               </ion-list>
             </ion-card-content>
@@ -122,6 +123,14 @@ import {
     arrowDownOutline,
     qrCodeOutline
   } from 'ionicons/icons'
+import { store } from '@/store';
+import { onMounted } from 'vue';
+import { getInfo } from '@/getinfo';
+
+onMounted(
+  getInfo
+)
+
 </script>
 
 <style scoped>
@@ -138,6 +147,9 @@ import {
 .negative {
   color: red;
 }
+.positive {
+  color: green;
+}
 
 .button-container {
   display: flex;
@@ -147,5 +159,8 @@ import {
 ion-fab {
   right: 15px;
   bottom: 15px
+}
+ion-item {
+  padding-left: 0px;
 }
 </style>

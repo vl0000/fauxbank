@@ -21,6 +21,7 @@
   import QrScanner from "qr-scanner";
   import { makeTransaction } from "@/maketransaction";
   import router from '@/router';
+  
   async function scan() {
     // Get take the picture
     let data = await CameraPreview.capture({quality: 100})

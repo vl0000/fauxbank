@@ -82,7 +82,7 @@ async function handleSignup() {
     .then(
       response => {
         if (response.access_token) {
-          store.jwt = response.access_token
+          store.jwt = "Bearer " + response.access_token
           router.push("/dashboard")
         } 
       }
