@@ -56,7 +56,7 @@ async function login() {
   form.append("password", password)
 
   let response = await fetch(
-    store.api + "/api/accounts",
+    store.api + "/api/account/token",
     {
       method: "POST",
       body: form
@@ -65,8 +65,9 @@ async function login() {
     .then(response => response.json())
     .then(
       response => {
-        if (response.status == 200) {
-          // STORE THE JWT KEY SOMEWHERE
+
+        if (response.access_token) {
+          store.jwt = response.access_token
           router.push("/dashboard")
         } 
       }
