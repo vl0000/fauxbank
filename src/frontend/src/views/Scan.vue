@@ -39,6 +39,8 @@
 
     //The function to create a transaction goes HERE!!!
 
+    return JSON.parse(result)
+
   }
 
   async function handleScan() {
