@@ -16,10 +16,6 @@ export async function makeTransaction(transaction: Object) {
         .then(res => res.json())
         .catch(err => console.error(err))
 
-        if (response.status != 200) {
-            console.error("The transaction could not go through\n Status: ", response.status)
-        } else {
-            return response
-        }
+        return response
         
 }

@@ -24,7 +24,7 @@
 
       <ion-row>
           <ion-col size="12">
-          <ion-input :value="amount" fill="outline" label="Ammount" label-placement="floating" placeholder="00.00" type="number"></ion-input>
+          <ion-input v-model="amount" fill="outline" label="Ammount" label-placement="floating" placeholder="00.00" type="number"></ion-input>
           </ion-col>
       </ion-row>
 
@@ -58,10 +58,10 @@
   import * as QRCode from 'qrcode';
 
 
-  let amount: string;
+  let amount: Number;
   
   function generate_code() {
-    let data = `{ "payee": ${store.account.number}, "amount": ${parseFloat(amount)} }`
+    let data = `{ "payee": ${store.account.number}, "amount": ${amount} }`
 
     let canvas = document.getElementById("canvas")
 
