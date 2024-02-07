@@ -30,7 +30,7 @@ After building everything, i'd recommend you to open it in which ever IDE is per
 ```bash
 npx cap open [android or ios]
 ```
-From those IDE's you will have an easier time emulating or building apks. If you just want to open it in a server use 
+From those IDE's you will have an easier time emulating or building apks. If you just want to open it in a browser use 
 ```bash 
 ionic serve
 ```
