@@ -26,3 +26,11 @@ npx cap add ios
 npx cap sync
 npx cap build ios
 ```
+After building everything, i'd recommend you to open it in which ever IDE is pertinent and use it to test it. Just use:
+```bash
+npx cap open [android or ios]
+```
+From those IDE's you will have an easier time emulating or building apks. If you just want to open it in a server use 
+```bash 
+ionic serve
+```
