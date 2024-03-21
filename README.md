@@ -10,7 +10,7 @@ The backend can be deployed straight to vercel from the repository. However you 
 openssl rand -hex 32
 ```
 **ALGO** is the algorithm that is used, i used HS256.
-**POSTGRES_URL** is the url to your database. This was meant to use postgresql from the start, hence the name.
+**POSTGRES_URL** is the url to your database. This project was meant to use postgresql from the start, hence the name.
 
 the address of the API can be changed in src/store.ts.
 
